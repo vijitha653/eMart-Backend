@@ -4,29 +4,34 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users") // maps to your "users" table
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long user_id;
 
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(name = "password_hash", nullable = false)
     private String password;
 
-    private Integer role_id;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    @Column(nullable = false)
+    private String status;
 
-    private LocalDateTime created_at;
-
-    public enum Status {
-        active, inactive
-    }
+    @Column(nullable = false)
+    private LocalDateTime created_at = LocalDateTime.now();
 
     // Getters and Setters
+
     public Long getUser_id() {
         return user_id;
     }
@@ -59,19 +64,19 @@ public class User {
         this.password = password;
     }
 
-    public Integer getRole_id() {
-        return role_id;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRole_id(Integer role_id) {
-        this.role_id = role_id;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
